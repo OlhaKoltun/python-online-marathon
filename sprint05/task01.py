@@ -8,7 +8,7 @@ class InvalidEmail(Exception):
         self.data = _data
 
     def __str__(self):
-        return repr(self.data)
+        return self.data
 
 
 def valid_email(email):
@@ -18,6 +18,6 @@ def valid_email(email):
             raise InvalidEmail('Email is not valid')
 
     except InvalidEmail as e:
-        return e.data
+        return e
 
     return 'Email is valid'
