@@ -8,30 +8,27 @@ import json
 import pickle
 from enum import Enum
 
+
 class FileType(Enum):
-    JSON = 1
-    BYTE = 2
+    JSON = {'mode': 'w', 'dump': json.dump}
+    BYTE = {'mode': 'wb', 'dump': pickle.dump}
 
 
 class SerializeManager:
     def __init__(self, filename, filetype):
         self.filename = filename
-        self.filetype = filetype
+        self.filetype = filetype.value
+        self._file = None
 
     def __enter__(self):
+        self._file = open(self.filename, self.filetype['mode'])
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_type:
-            print(f'but with {exc_type.__name__} with name {exc_val}')
+        self._file.close()
 
     def serialize(self, obj):
-        if self.filetype == FileType.JSON:
-            with open(self.filename, 'w') as f:
-                json.dump(obj, f)
-        elif self.filetype == FileType.BYTE:
-            with open(self.filename, 'wb') as f:
-                pickle.dump(obj, f)
+        self.filetype['dump'](obj, self._file)
 
 
 def serialize(obj, filename, filetype):
