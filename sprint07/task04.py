@@ -24,3 +24,4 @@ class WashingMachine:
         self.washing.wash()
         self.rinsing.rinse()
         self.spinning.spine()
+        
